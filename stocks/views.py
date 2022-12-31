@@ -2,23 +2,24 @@ from django.shortcuts import redirect, render
 from django.contrib import messages
 from stocks.forms import Stockform
 from stocks.models import Stock
-import requests 
+import requests
 import json
 
 
 def home(request):
     if request.method=='POST':
-        ticker=request.POST['ticker']        
-        api_request = requests.get(f"https://cloud.iexapis.com/stable/stock/{ticker}/quote?token=pk_ca3c415bcea148b1a5ab1fbd680dfdb0")
-        
+        ticker=request.POST['ticker']
+        api_request = requests.get(f"https://cloud.iexapis.com/stable/stock/{ticker}/quote?token=pk_8b445b4f633944e88fed24aacf86fed9")
+
         try:
             api=json.loads(api_request.content)
+            print(api)
         except Exception as e:
-            api="Error..." 
-        return render(request, 'home.html',{"api":api})                   
+            api="Error..."
+        return render(request, 'home.html',{"api":api})
     else:
-        return render(request, 'home.html',{"ticker":"Enter ticker symbol above..."}) 
-        # if api then post   if ticker thenget doubt
+        return render(request, 'home.html',{"ticker":"Enter ticker symbol above..."})
+
 
 
 
@@ -38,12 +39,12 @@ def add_stock(request):
         output=[]
         for ticker_item in ticker:
             api_request = requests.get(f"https://cloud.iexapis.com/stable/stock/{str(ticker_item)}/quote?token=pk_ca3c415bcea148b1a5ab1fbd680dfdb0")
-            
+
             try:
                 api=json.loads(api_request.content)
                 output.append(api)
             except Exception as e:
-                api="Error..." 
+                api="Error..."
         return render(request, 'add_stock.html',{'ticker':ticker,'output':output})
 
 def delete(request,stock_id):
