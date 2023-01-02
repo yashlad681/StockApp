@@ -10,13 +10,19 @@ def home(request):
     if request.method=='POST':
         ticker=request.POST['ticker']
         api_request = requests.get(f"https://cloud.iexapis.com/stable/stock/{ticker}/quote?token=pk_8b445b4f633944e88fed24aacf86fed9")
+        api_graph_rsponse = requests.get(f"https://cloud.iexapis.com/stable/stock/{ticker}/chart/1m?chartByDay=true&range=1m&token=pk_8b445b4f633944e88fed24aacf86fed9")
+        graph_data = json.loads(api_graph_rsponse.content)
+        labels = []
+        prices = []
+        for item in graph_data:
+            labels.append(item.get('date'))
+            prices.append(item.get('close'))
 
         try:
             api=json.loads(api_request.content)
-            print(api)
         except Exception as e:
             api="Error..."
-        return render(request, 'home.html',{"api":api})
+        return render(request, 'home.html',{"api":api,'labels':labels,'prices':prices})
     else:
         return render(request, 'home.html',{"ticker":"Enter ticker symbol above..."})
 

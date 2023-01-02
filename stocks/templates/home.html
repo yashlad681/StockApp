@@ -19,8 +19,38 @@
         YTD Change:{{api.ytdChange}} <br>
         52Wk High:{{api.week52high}} <br>
         52Wk Low: {{api.week52Low}}
-        
+        <canvas id="stockChart" width="400" height="400"></canvas>
     {% endif %}
+
 {% endif %}
 
 {% endblock content %}
+{%block script%}
+<script>
+  // Create the chart
+  const ctx = document.getElementById('stockChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: {{labels|safe}},
+      datasets: [{
+        //label: 'Closing Price',
+        data: {{prices|safe}},
+        label: 'Closing Price',
+        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+        borderColor: 'rgba(255, 99, 132, 1)',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true
+          }
+        }]
+      }
+    }
+  });
+</script>
+{%endblock%}
